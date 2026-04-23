@@ -1,0 +1,116 @@
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
+
+.header { margin-bottom: 20px; }
+.header h1 { font-size: 22px; font-weight: 600; }
+.addr { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+.account { font-size: 13px; color: #94a3b8; margin-bottom: 16px; }
+
+/* ── Buttons ── */
+.btn {
+  width: 100%;
+  padding: 11px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 8px;
+  transition: opacity 0.15s;
+}
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.primary { background: #0052ff; color: #fff; }
+.primary:hover:not(:disabled) { background: #0047e0; }
+.danger  { background: #dc2626; color: #fff; }
+.danger:hover:not(:disabled)  { background: #b91c1c; }
+.warning { background: #d97706; color: #fff; }
+.warning:hover:not(:disabled) { background: #b45309; }
+
+/* ── State badge ── */
+.stateBadge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+.state_gray   { background: #1e293b; color: #94a3b8; }
+.state_blue   { background: #1d4ed820; color: #60a5fa; border: 1px solid #1d4ed8; }
+.state_purple { background: #7c3aed20; color: #a78bfa; border: 1px solid #7c3aed; }
+.state_amber  { background: #d9770620; color: #fbbf24; border: 1px solid #d97706; }
+.state_teal   { background: #0d948020; color: #2dd4bf; border: 1px solid #0d9488; }
+.state_red    { background: #dc262620; color: #f87171; border: 1px solid #dc2626; }
+
+/* ── Panel ── */
+.panel {
+  background: #111827;
+  border: 1px solid #1e293b;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.stat { display: flex; flex-direction: column; gap: 2px; }
+.label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+.value { font-size: 13px; color: #e2e8f0; }
+.ok   { color: #34d399; }
+.warn { color: #fbbf24; }
+
+/* ── Cards ── */
+.actions { display: flex; flex-direction: column; gap: 12px; }
+.card {
+  background: #111827;
+  border: 1px solid #1e293b;
+  border-radius: 14px;
+  padding: 16px;
+}
+.card h3 { font-size: 14px; color: #94a3b8; margin-bottom: 8px; }
+.hint { font-size: 12px; color: #64748b; margin-bottom: 4px; }
+
+/* ── Input ── */
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #1e293b;
+  background: #0b0f19;
+  color: #e2e8f0;
+  font-size: 14px;
+  outline: none;
+  margin-bottom: 4px;
+}
+.input:focus { border-color: #0052ff; }
+
+/* ── Status ── */
+.status {
+  margin-top: 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #1e293b;
+  font-size: 13px;
+  color: #94a3b8;
+}
+.err { background: #dc26261a; color: #f87171; }
+
+/* ── Refresh ── */
+.refresh {
+  display: block;
+  margin: 16px auto 0;
+  background: none;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  color: #64748b;
+  font-size: 12px;
+  padding: 6px 16px;
+  cursor: pointer;
+}
+.refresh:hover { color: #94a3b8; border-color: #334155; }
