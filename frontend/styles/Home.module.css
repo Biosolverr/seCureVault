@@ -1,5 +1,3 @@
-*, *::before, *::after { box-sizing: border-box; }
-
 /* ── Layout ── */
 .layout {
   display: flex;
