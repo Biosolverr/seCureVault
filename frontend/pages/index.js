@@ -5,6 +5,49 @@ import styles from "../styles/Home.module.css";
 
 const STATE_COLORS = ["gray", "blue", "purple", "amber", "teal", "red"];
 
+function HelpPanel() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={styles.helpWrap}>
+      <button className={styles.helpBtn} onClick={() => setOpen(o => !o)} title="How it works">
+        {open ? "✕" : "?"}
+      </button>
+      {open && (
+        <div className={styles.helpBox}>
+          <h3>How SecureVault works</h3>
+          <p>Trustless escrow between two parties — no middleman needed.</p>
+
+          <div className={styles.helpSteps}>
+            <div className={styles.helpStep}><span>1</span>Owner deposits ETH → <b>FUNDED</b></div>
+            <div className={styles.helpStep}><span>2</span>Owner locks the funds → <b>LOCKED</b></div>
+            <div className={styles.helpStep}><span>3</span>Counterparty fulfills the deal off-chain</div>
+            <div className={styles.helpStep}><span>4</span>Counterparty reveals secret → <b>EXECUTION_PENDING</b></div>
+            <div className={styles.helpStep}><span>5</span>Funds sent to counterparty → <b>EXECUTED</b></div>
+          </div>
+
+          <p className={styles.helpNote}>Deal fell through? Owner can refund after the timer expires.</p>
+
+          <h4>Protections</h4>
+          <ul className={styles.helpList}>
+            <li><b>Secret</b> — funds can't be released without the correct code</li>
+            <li><b>Quarantine</b> — anyone can freeze the contract for 12h on suspicious activity</li>
+            <li><b>Refund delay</b> — from LOCKED state only after lockDuration + 24h</li>
+            <li><b>Upgrade timelock</b> — contract upgrades require 48h notice</li>
+          </ul>
+
+          <h4>Use cases</h4>
+          <ul className={styles.helpList}>
+            <li>OTC purchase of NFTs or tokens</li>
+            <li>Freelance payment released on delivery</li>
+            <li>Cross-chain atomic swap</li>
+            <li>Any p2p deal requiring trustless guarantees</li>
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Home() {
   const [provider, setProvider]   = useState(null);
   const [contract, setContract]   = useState(null);
@@ -59,28 +102,25 @@ export default function Home() {
   async function handleConnect(type) {
     setTxStatus("");
     try {
-      // динамический импорт — избегаем SSR краша
       const { connectCoinbase, connectInjected } = await import("../lib/wallet");
-      const result = type === "coinbase"
-        ? await connectCoinbase()
-        : await connectInjected();
+      const result = type === "coinbase" ? await connectCoinbase() : await connectInjected();
       await afterConnect(result);
     } catch (e) {
-      setTxStatus("❌ " + (e?.message || "Ошибка подключения"));
+      setTxStatus("❌ " + (e?.message || "Connection error"));
     }
   }
 
   async function tx(fn) {
     setLoading(true);
-    setTxStatus("Отправка...");
+    setTxStatus("Sending...");
     try {
       const t = await fn();
-      setTxStatus("Ожидание подтверждения...");
+      setTxStatus("Waiting for confirmation...");
       await t.wait();
-      setTxStatus("✅ Подтверждено");
+      setTxStatus("✅ Confirmed");
       await loadVaultData(contract, provider);
     } catch (e) {
-      setTxStatus("❌ " + (e?.reason || e?.message || "Ошибка").slice(0, 120));
+      setTxStatus("❌ " + (e?.reason || e?.message || "Error").slice(0, 120));
     } finally {
       setLoading(false);
     }
@@ -95,6 +135,8 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
+      <HelpPanel />
+
       <header className={styles.header}>
         <h1>SecureVault</h1>
         <p className={styles.addr}>
@@ -111,7 +153,7 @@ export default function Home() {
             Coinbase Smart Wallet
           </button>
           <button className={`${styles.btn} ${styles.secondary}`} onClick={() => handleConnect("injected")}>
-            MetaMask / другой кошелёк
+            MetaMask / other wallet
           </button>
         </div>
       ) : (
@@ -128,20 +170,20 @@ export default function Home() {
           </div>
           <div className={styles.grid}>
             <div className={styles.stat}>
-              <span className={styles.label}>Баланс</span>
+              <span className={styles.label}>Balance</span>
               <span className={styles.value}>{balance} ETH</span>
             </div>
             <div className={styles.stat}>
-              <span className={styles.label}>Карантин</span>
+              <span className={styles.label}>Quarantine</span>
               <span className={`${styles.value} ${isQuarantined ? styles.warn : styles.ok}`}>
-                {isQuarantined ? `до ${new Date(quarantineEnd*1000).toLocaleTimeString()}` : "нет"}
+                {isQuarantined ? `until ${new Date(quarantineEnd*1000).toLocaleTimeString()}` : "none"}
               </span>
             </div>
             {lockTs > 0 && (
               <div className={styles.stat}>
-                <span className={styles.label}>Lock истекает</span>
+                <span className={styles.label}>Lock expires</span>
                 <span className={`${styles.value} ${lockExpired ? styles.ok : ""}`}>
-                  {lockExpired ? "✅ истёк" : new Date((lockTs+lockDur)*1000).toLocaleString()}
+                  {lockExpired ? "✅ expired" : new Date((lockTs+lockDur)*1000).toLocaleString()}
                 </span>
               </div>
             )}
@@ -159,7 +201,7 @@ export default function Home() {
         <div className={styles.actions}>
           {vaultState === 0 && (
             <div className={styles.card}>
-              <h3>Депозит</h3>
+              <h3>Deposit</h3>
               <input className={styles.input} value={amount} onChange={e => setAmount(e.target.value)} placeholder="0.01" />
               <button className={`${styles.btn} ${styles.primary}`} disabled={loading || isQuarantined}
                 onClick={() => tx(() => contract.deposit({ value: ethers.parseEther(amount) }))}>
@@ -169,7 +211,7 @@ export default function Home() {
           )}
           {vaultState === 1 && (
             <div className={styles.card}>
-              <h3>Заблокировать</h3>
+              <h3>Lock funds</h3>
               <button className={`${styles.btn} ${styles.warning}`} disabled={loading || isQuarantined}
                 onClick={() => tx(() => contract.lock())}>
                 Lock
@@ -178,18 +220,18 @@ export default function Home() {
           )}
           {vaultState === 2 && (
             <div className={styles.card}>
-              <h3>Раскрыть секрет</h3>
+              <h3>Reveal secret</h3>
               <input className={styles.input} value={secret} onChange={e => setSecret(e.target.value)}
-                placeholder="секретная фраза" type="password" />
+                placeholder="secret phrase" type="password" />
               <button className={`${styles.btn} ${styles.primary}`} disabled={loading || isQuarantined || !lockExpired}
                 onClick={() => tx(() => contract.initiateExecution(ethers.keccak256(ethers.toUtf8Bytes(secret))))}>
-                {lockExpired ? "Reveal & Initiate" : "Ждём окончания lock..."}
+                {lockExpired ? "Reveal & Initiate" : "Waiting for lock to expire..."}
               </button>
             </div>
           )}
           {vaultState === 3 && (
             <div className={styles.card}>
-              <h3>Исполнить</h3>
+              <h3>Execute</h3>
               <button className={`${styles.btn} ${styles.primary}`} disabled={loading || isQuarantined}
                 onClick={() => tx(() => contract.execute())}>
                 Execute
@@ -198,17 +240,17 @@ export default function Home() {
           )}
           {(vaultState === 1 || vaultState === 2) && (
             <div className={styles.card}>
-              <h3>Возврат</h3>
+              <h3>Refund</h3>
               <button className={`${styles.btn} ${styles.danger}`} disabled={loading || isQuarantined || !refundAvail}
                 onClick={() => tx(() => contract.refund())}>
-                {refundAvail ? "Refund" : "Недоступно пока"}
+                {refundAvail ? "Refund" : "Not available yet"}
               </button>
             </div>
           )}
           {!isQuarantined && vaultState !== 4 && vaultState !== 5 && (
             <div className={styles.card}>
-              <h3>Карантин</h3>
-              <p className={styles.hint}>Заморозить контракт на 12ч. Стейк 0.01 ETH.</p>
+              <h3>Quarantine</h3>
+              <p className={styles.hint}>Freeze the contract for 12h. Stake 0.01 ETH.</p>
               <button className={`${styles.btn} ${styles.danger}`} disabled={loading}
                 onClick={() => tx(() => contract.initiateQuarantine({ value: ethers.parseEther("0.01") }))}>
                 Quarantine (0.01 ETH)
@@ -226,7 +268,7 @@ export default function Home() {
 
       {account && (
         <button className={styles.refresh} onClick={() => loadVaultData(contract, provider)}>
-          ↻ Обновить
+          ↻ Refresh
         </button>
       )}
     </div>
