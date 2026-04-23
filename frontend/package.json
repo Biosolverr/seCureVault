@@ -12,7 +12,6 @@
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "ethers": "^6.10.0",
-    "@coinbase/wallet-sdk": "^4.0.1",
-    "@coinbase/onchainkit": "^0.29.0"
+    "@coinbase/wallet-sdk": "^4.0.1"
   }
 }
