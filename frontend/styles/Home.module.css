@@ -7,7 +7,49 @@
 .header { margin-bottom: 20px; }
 .header h1 { font-size: 22px; font-weight: 600; }
 .addr { font-size: 12px; color: #94a3b8; margin-top: 4px; }
-.account { font-size: 13px; color: #94a3b8; margin-bottom: 16px; }
+
+/* ── Connect ── */
+.connectBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.btnOnchain {
+  width: 100%;
+  padding: 11px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  background: #0052ff;
+  color: #fff;
+  transition: opacity 0.15s;
+}
+.btnOnchain:hover { background: #0047e0; }
+
+/* ── Account row ── */
+.accountRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.identity { display: flex; align-items: center; gap: 8px; }
+.avatar { width: 28px; height: 28px; border-radius: 50%; }
+.name { font-size: 14px; color: #e2e8f0; }
+.account { font-size: 13px; color: #94a3b8; }
+.walletBadge {
+  margin-left: auto;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: #1e293b;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
 
 /* ── Buttons ── */
 .btn {
@@ -22,12 +64,14 @@
   transition: opacity 0.15s;
 }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.primary { background: #0052ff; color: #fff; }
-.primary:hover:not(:disabled) { background: #0047e0; }
-.danger  { background: #dc2626; color: #fff; }
-.danger:hover:not(:disabled)  { background: #b91c1c; }
-.warning { background: #d97706; color: #fff; }
-.warning:hover:not(:disabled) { background: #b45309; }
+.primary   { background: #0052ff; color: #fff; }
+.primary:hover:not(:disabled)   { background: #0047e0; }
+.secondary { background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+.secondary:hover:not(:disabled) { background: #263348; }
+.danger    { background: #dc2626; color: #fff; }
+.danger:hover:not(:disabled)    { background: #b91c1c; }
+.warning   { background: #d97706; color: #fff; }
+.warning:hover:not(:disabled)   { background: #b45309; }
 
 /* ── State badge ── */
 .stateBadge {
@@ -53,12 +97,7 @@
   padding: 16px;
   margin-bottom: 20px;
 }
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .stat { display: flex; flex-direction: column; gap: 2px; }
 .label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
 .value { font-size: 13px; color: #e2e8f0; }
