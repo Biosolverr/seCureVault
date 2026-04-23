@@ -1,0 +1,17 @@
+{
+  "name": "securevault-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "contracts",
+    "frontend"
+  ],
+  "scripts": {
+    "compile": "yarn workspace securevault-contracts compile",
+    "test": "yarn workspace securevault-contracts test",
+    "dev": "yarn workspace securevault-frontend dev",
+    "build": "yarn workspace securevault-frontend build",
+    "deploy:testnet": "yarn workspace securevault-contracts deploy:testnet",
+    "deploy:mainnet": "yarn workspace securevault-contracts deploy:mainnet"
+  }
+}
